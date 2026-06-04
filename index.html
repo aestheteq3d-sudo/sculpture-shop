@@ -1,0 +1,1267 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AESTHETEQ3D — Living Light Sculpture</title>
+<script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.5.0/model-viewer.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garant:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --gold: #C8A96E;
+  --gold-light: #D4BA85;
+  --cream: #F5F0E8;
+  --dark: #0A0905;
+  --mid: #141209;
+  --mid2: #1C1912;
+  --text: #E0DBD0;
+  --muted: #7A7060;
+  --border: #252018;
+  --border2: #2E2820;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{background:var(--dark);color:var(--text);font-family:'Inter',sans-serif;font-size:15px;line-height:1.6;overflow-x:hidden;}
+h1,h2,h3,h4{font-family:'Cormorant Garant',serif;font-weight:300;letter-spacing:0.02em;}
+h1{font-size:clamp(3rem,8vw,7rem);line-height:1.0;}
+h2{font-size:clamp(2rem,5vw,4rem);}
+h3{font-size:clamp(1.4rem,3vw,2.2rem);}
+a{text-decoration:none;color:inherit;}
+button{font-family:'Inter',sans-serif;}
+
+/* ── NAV ── */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:1.2rem 3rem;
+  background:linear-gradient(to bottom,rgba(10,9,5,0.96) 0%,rgba(10,9,5,0.7) 100%);
+  backdrop-filter:blur(14px);
+  border-bottom:1px solid rgba(200,169,110,0.08);
+  transition:padding 0.3s;
+}
+.nav-logo{
+  font-family:'Cormorant Garant',serif;font-size:1.5rem;
+  letter-spacing:0.18em;color:var(--gold);cursor:pointer;
+}
+.nav-links{display:flex;gap:2rem;align-items:center;}
+.nav-links a{
+  color:var(--muted);font-size:0.78rem;letter-spacing:0.12em;
+  text-transform:uppercase;transition:color 0.25s;cursor:pointer;
+}
+.nav-links a:hover{color:var(--text);}
+.nav-cta{
+  background:var(--gold);color:var(--dark);
+  padding:0.6rem 1.5rem;font-size:0.78rem;
+  letter-spacing:0.12em;text-transform:uppercase;
+  border:none;cursor:pointer;transition:background 0.25s;
+}
+.nav-cta:hover{background:var(--gold-light);}
+
+/* ── PAGE SYSTEM ── */
+.page{display:none;min-height:100vh;}
+.page.active{display:block;}
+
+/* ── LOCAL SERVER NOTICE ── */
+#local-notice{
+  display:none;
+  position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);
+  background:var(--mid2);border:1px solid var(--gold);
+  padding:1rem 2rem;z-index:200;font-size:0.8rem;
+  color:var(--text);max-width:520px;text-align:center;
+  box-shadow:0 8px 40px rgba(0,0,0,0.6);
+}
+#local-notice b{color:var(--gold);}
+#local-notice button{
+  margin-left:1.2rem;background:none;border:none;
+  color:var(--muted);cursor:pointer;font-size:0.8rem;
+}
+
+/* ══════════════════════════════
+   HOME PAGE
+══════════════════════════════ */
+.hero{
+  min-height:100vh;
+  display:grid;grid-template-columns:1fr 1fr;
+  align-items:center;padding:0 3rem;padding-top:80px;
+  gap:2rem;position:relative;overflow:hidden;
+}
+.hero::before{
+  content:'';position:absolute;inset:0;
+  background:
+    radial-gradient(ellipse at 70% 50%,rgba(200,169,110,0.07) 0%,transparent 55%),
+    radial-gradient(ellipse at 20% 80%,rgba(160,139,200,0.04) 0%,transparent 50%);
+  pointer-events:none;
+}
+.hero-text{z-index:1;}
+.hero-eyebrow{
+  font-size:0.72rem;letter-spacing:0.28em;text-transform:uppercase;
+  color:var(--gold);margin-bottom:1.5rem;display:flex;align-items:center;gap:0.8rem;
+}
+.hero-eyebrow::before{content:'';width:30px;height:1px;background:var(--gold);}
+.hero-title{color:var(--cream);margin-bottom:1.5rem;}
+.hero-title em{font-style:italic;color:var(--gold);}
+.hero-sub{
+  color:var(--muted);font-size:1.05rem;line-height:1.85;
+  max-width:420px;margin-bottom:2.5rem;
+}
+.hero-actions{display:flex;gap:1rem;flex-wrap:wrap;}
+.btn-primary{
+  background:var(--gold);color:var(--dark);
+  padding:1rem 2.5rem;border:none;cursor:pointer;
+  font-size:0.82rem;letter-spacing:0.14em;text-transform:uppercase;
+  transition:all 0.25s;display:inline-block;
+}
+.btn-primary:hover{background:var(--gold-light);transform:translateY(-1px);}
+.btn-outline{
+  background:transparent;color:var(--text);
+  padding:1rem 2.5rem;border:1px solid var(--border2);
+  cursor:pointer;font-size:0.82rem;letter-spacing:0.14em;
+  text-transform:uppercase;transition:all 0.25s;display:inline-block;
+}
+.btn-outline:hover{border-color:var(--gold);color:var(--gold);}
+.hero-viewer{height:72vh;min-height:500px;position:relative;}
+.hero-viewer model-viewer{
+  width:100%;height:100%;
+  --poster-color:transparent;background:transparent;
+}
+.hero-stat-row{
+  display:flex;gap:3rem;margin-top:3rem;padding-top:2rem;
+  border-top:1px solid var(--border);
+}
+.hero-stat-val{
+  font-family:'Cormorant Garant',serif;font-size:2.2rem;
+  color:var(--gold);display:block;
+}
+.hero-stat-label{font-size:0.72rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--muted);}
+
+/* Marquee */
+.marquee-strip{
+  border-top:1px solid var(--border);border-bottom:1px solid var(--border);
+  padding:0.85rem 0;overflow:hidden;background:var(--mid);
+}
+.marquee-inner{
+  display:flex;gap:3.5rem;
+  animation:marquee 30s linear infinite;
+  white-space:nowrap;width:max-content;
+}
+.marquee-inner span{font-size:0.7rem;letter-spacing:0.22em;text-transform:uppercase;color:var(--muted);}
+.marquee-inner .dot{color:var(--gold);font-size:0.5rem;}
+@keyframes marquee{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+
+/* Section base */
+.section{padding:6rem 3rem;}
+.section-label{
+  font-size:0.7rem;letter-spacing:0.28em;text-transform:uppercase;
+  color:var(--gold);display:flex;align-items:center;gap:0.8rem;margin-bottom:1rem;
+}
+.section-label::before{content:'';width:24px;height:1px;background:var(--gold);}
+.section-title{color:var(--cream);margin-bottom:1rem;}
+.section-sub{color:var(--muted);max-width:500px;margin-bottom:3rem;font-size:0.95rem;line-height:1.85;}
+
+/* Collection cards grid */
+.collections-grid{
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:2px;
+}
+.coll-card{
+  position:relative;cursor:pointer;
+  aspect-ratio:3/5;overflow:hidden;
+  background:var(--mid);
+}
+.coll-card model-viewer{
+  width:100%;height:100%;
+  --poster-color:transparent;background:transparent;
+  transition:transform 0.6s ease;
+}
+.coll-card:hover model-viewer{transform:scale(1.03);}
+.coll-card-overlay{
+  position:absolute;bottom:0;left:0;right:0;
+  padding:2rem 1.2rem 1.5rem;
+  background:linear-gradient(to top,rgba(5,4,2,0.9) 0%,rgba(5,4,2,0.3) 60%,transparent 100%);
+  z-index:2;transition:padding 0.3s;
+}
+.coll-card:hover .coll-card-overlay{padding-bottom:2rem;}
+.coll-card-tag{
+  font-size:0.62rem;letter-spacing:0.2em;text-transform:uppercase;
+  margin-bottom:0.4rem;display:block;
+}
+.coll-card-name{
+  font-family:'Cormorant Garant',serif;
+  font-size:1.45rem;font-weight:300;color:white;
+  display:block;margin-bottom:0.2rem;line-height:1.2;
+}
+.coll-card-sub{font-size:0.68rem;color:rgba(255,255,255,0.45);letter-spacing:0.08em;}
+.coll-card-btn{
+  display:inline-block;margin-top:0.8rem;
+  font-size:0.65rem;letter-spacing:0.15em;text-transform:uppercase;
+  color:var(--gold);
+  opacity:0;transform:translateY(6px);
+  transition:opacity 0.3s,transform 0.3s;
+}
+.coll-card:hover .coll-card-btn{opacity:1;transform:translateY(0);}
+
+/* Featured strip */
+.featured-strip{
+  display:grid;grid-template-columns:1fr 2fr 1fr;
+  gap:2px;margin-top:2px;
+}
+.featured-card{
+  background:var(--mid);cursor:pointer;
+  position:relative;overflow:hidden;
+}
+.featured-card.tall{aspect-ratio:2/3;}
+.featured-card.wide{aspect-ratio:16/9;}
+.featured-card model-viewer{
+  width:100%;height:100%;
+  --poster-color:transparent;background:transparent;
+}
+.featured-card-label{
+  position:absolute;bottom:1.5rem;left:1.5rem;z-index:2;
+  background:rgba(10,9,5,0.8);padding:0.5rem 1rem;
+  font-size:0.72rem;letter-spacing:0.1em;
+}
+.featured-card-label b{display:block;color:var(--gold);font-weight:400;font-family:'Cormorant Garant',serif;font-size:1.1rem;}
+
+/* Why us */
+.why-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(210px,1fr));
+  gap:1px;background:var(--border);
+  margin-top:3rem;border:1px solid var(--border);
+}
+.why-card{
+  padding:2rem;background:var(--mid);
+}
+.why-icon{font-size:1.6rem;margin-bottom:1rem;display:block;}
+.why-title{font-family:'Cormorant Garant',serif;font-size:1.35rem;color:var(--cream);margin-bottom:0.5rem;}
+.why-text{color:var(--muted);font-size:0.85rem;line-height:1.75;}
+
+/* Compare table */
+.compare-wrap{overflow-x:auto;margin-top:2rem;}
+.compare-table{
+  width:100%;border-collapse:collapse;min-width:600px;
+}
+.compare-table th,.compare-table td{
+  padding:0.9rem 1.2rem;text-align:left;
+  border-bottom:1px solid var(--border);
+  font-size:0.85rem;
+}
+.compare-table thead{background:var(--mid);}
+.compare-table th{
+  color:var(--gold);font-weight:500;
+  font-size:0.68rem;letter-spacing:0.14em;text-transform:uppercase;
+}
+.compare-table tr.hl{background:rgba(200,169,110,0.04);}
+.check{color:#7DC9A0;}
+.cross{color:#C87070;}
+.half{color:var(--muted);}
+
+/* CTA Banner */
+.cta-banner{
+  margin:0 3rem 6rem;
+  background:linear-gradient(135deg,#1A1510 0%,#0D0B07 100%);
+  border:1px solid rgba(200,169,110,0.25);
+  padding:5rem 4rem;
+  display:flex;align-items:center;justify-content:space-between;
+  gap:2rem;flex-wrap:wrap;
+}
+.cta-banner h2{color:var(--cream);}
+.cta-banner p{color:var(--muted);margin-top:0.4rem;}
+.cta-store-btn{
+  background:var(--gold);color:var(--dark);
+  padding:1.2rem 3rem;border:none;cursor:pointer;
+  font-size:0.82rem;letter-spacing:0.18em;text-transform:uppercase;
+  white-space:nowrap;display:inline-block;
+  transition:all 0.25s;
+}
+.cta-store-btn:hover{background:var(--gold-light);transform:translateY(-2px);}
+
+/* ══════════════════════════════
+   COLLECTION PAGE
+══════════════════════════════ */
+.coll-header{
+  padding:9rem 3rem 3.5rem;
+  border-bottom:1px solid var(--border);
+  position:relative;overflow:hidden;
+}
+.coll-header::after{
+  content:'';position:absolute;top:0;right:0;width:40%;bottom:0;
+  background:radial-gradient(ellipse at 80% 40%,rgba(200,169,110,0.05) 0%,transparent 60%);
+  pointer-events:none;
+}
+.coll-header-inner{display:flex;align-items:flex-end;justify-content:space-between;gap:3rem;flex-wrap:wrap;}
+.coll-tagline{
+  color:var(--gold);font-style:italic;
+  font-family:'Cormorant Garant',serif;font-size:1.4rem;
+  margin-top:0.4rem;display:block;
+}
+.coll-header-desc{color:var(--muted);max-width:380px;font-size:0.9rem;line-height:1.8;}
+.sort-bar{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:1.2rem 3rem;border-bottom:1px solid var(--border);
+  background:var(--mid);flex-wrap:wrap;gap:0.8rem;
+}
+.sort-bar-count{color:var(--muted);font-size:0.8rem;letter-spacing:0.08em;}
+.sort-btns{display:flex;gap:0.4rem;}
+.sort-btn{
+  padding:0.4rem 0.9rem;border:1px solid var(--border2);
+  background:none;color:var(--muted);cursor:pointer;
+  font-size:0.7rem;letter-spacing:0.1em;text-transform:uppercase;
+  transition:all 0.2s;
+}
+.sort-btn.active,.sort-btn:hover{border-color:var(--gold);color:var(--gold);background:rgba(200,169,110,0.05);}
+
+/* Product grid */
+.product-grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
+  gap:2px;background:var(--border);
+}
+.product-card{
+  background:var(--dark);cursor:pointer;
+  transition:background 0.25s;position:relative;
+}
+.product-card:hover{background:var(--mid);}
+.product-card-viewer{aspect-ratio:1/1.15;overflow:hidden;}
+.product-card-viewer model-viewer{
+  width:100%;height:100%;
+  --poster-color:transparent;background:transparent;
+}
+.product-card-info{
+  padding:1.1rem 1.4rem 1.4rem;
+  border-top:1px solid var(--border);
+}
+.product-card-name{
+  font-family:'Cormorant Garant',serif;
+  font-size:1.3rem;color:var(--cream);
+  display:block;margin-bottom:0.2rem;
+}
+.product-card-sku{
+  font-size:0.65rem;color:var(--muted);
+  letter-spacing:0.1em;display:block;margin-bottom:0.8rem;
+}
+.product-card-footer{display:flex;align-items:center;justify-content:space-between;}
+.product-card-price{
+  font-size:1.05rem;color:var(--gold);
+  font-family:'Cormorant Garant',serif;
+}
+.product-card-cta{
+  font-size:0.65rem;letter-spacing:0.12em;text-transform:uppercase;
+  color:var(--muted);background:none;border:none;cursor:pointer;
+  transition:color 0.2s;padding:0;
+}
+.product-card:hover .product-card-cta{color:var(--gold);}
+
+/* Pagination */
+.pagination{
+  display:flex;align-items:center;justify-content:center;
+  gap:0.4rem;padding:3rem;
+}
+.page-btn{
+  width:38px;height:38px;border:1px solid var(--border2);
+  background:none;color:var(--muted);cursor:pointer;
+  font-size:0.82rem;transition:all 0.2s;
+}
+.page-btn.active{border-color:var(--gold);color:var(--gold);background:rgba(200,169,110,0.06);}
+.page-btn:hover:not(.active){border-color:var(--text);color:var(--text);}
+
+/* ══════════════════════════════
+   PRODUCT DETAIL PAGE
+══════════════════════════════ */
+.product-detail{
+  display:grid;grid-template-columns:1.15fr 1fr;
+  min-height:calc(100vh - 80px);padding-top:80px;
+}
+.product-viewer-panel{
+  position:sticky;top:80px;
+  height:calc(100vh - 80px);
+  background:var(--mid);
+}
+.product-viewer-panel model-viewer{
+  width:100%;height:100%;
+  --poster-color:transparent;background:transparent;
+}
+.product-info-panel{
+  padding:4rem 3rem;
+  border-left:1px solid var(--border);
+  overflow-y:auto;
+  max-height:calc(100vh - 80px);
+}
+.product-breadcrumb{
+  font-size:0.72rem;color:var(--muted);
+  letter-spacing:0.1em;margin-bottom:2rem;cursor:pointer;
+  display:inline-flex;align-items:center;gap:0.5rem;
+  transition:color 0.2s;
+}
+.product-breadcrumb:hover{color:var(--text);}
+.product-detail-name{
+  font-family:'Cormorant Garant',serif;
+  font-size:clamp(2.5rem,4vw,3.8rem);font-weight:300;color:var(--cream);
+  line-height:1.1;margin-bottom:0.4rem;
+}
+.product-detail-sku{
+  font-size:0.7rem;color:var(--muted);letter-spacing:0.12em;
+  margin-bottom:1.8rem;display:block;
+}
+.product-detail-price{
+  font-family:'Cormorant Garant',serif;
+  font-size:2.4rem;color:var(--gold);margin-bottom:1.8rem;
+}
+.product-detail-desc{
+  color:var(--muted);line-height:1.9;margin-bottom:2.5rem;font-size:0.9rem;
+  padding-bottom:2rem;border-bottom:1px solid var(--border);
+}
+.detail-section{margin-bottom:2rem;}
+.detail-section-label{
+  font-size:0.65rem;letter-spacing:0.22em;text-transform:uppercase;
+  color:var(--muted);margin-bottom:0.9rem;display:block;
+}
+.color-options{display:flex;gap:0.7rem;flex-wrap:wrap;margin-bottom:0.5rem;}
+.color-opt{
+  width:34px;height:34px;border-radius:50%;cursor:pointer;
+  border:2px solid transparent;transition:border-color 0.2s,transform 0.2s;
+  position:relative;
+}
+.color-opt.active,.color-opt:hover{border-color:var(--gold);transform:scale(1.1);}
+.color-name{font-size:0.7rem;color:var(--muted);min-height:1rem;margin-top:0.3rem;}
+.size-options{display:flex;gap:0.6rem;flex-wrap:wrap;}
+.size-opt{
+  padding:0.5rem 1.1rem;border:1px solid var(--border2);
+  background:none;color:var(--muted);cursor:pointer;
+  font-size:0.78rem;transition:all 0.2s;
+}
+.size-opt.active,.size-opt:hover{border-color:var(--gold);color:var(--gold);}
+.order-btn{
+  width:100%;padding:1.3rem;background:var(--gold);color:var(--dark);
+  border:none;cursor:pointer;font-size:0.88rem;
+  letter-spacing:0.18em;text-transform:uppercase;
+  margin-top:2rem;transition:all 0.25s;
+}
+.order-btn:hover{background:var(--gold-light);transform:translateY(-1px);}
+.order-note{
+  text-align:center;margin-top:0.8rem;
+  font-size:0.72rem;color:var(--muted);
+}
+.product-specs{margin-top:2.5rem;padding-top:2rem;border-top:1px solid var(--border);}
+.spec-row{
+  display:flex;justify-content:space-between;
+  padding:0.65rem 0;border-bottom:1px solid rgba(37,32,24,0.6);
+  font-size:0.82rem;
+}
+.spec-label{color:var(--muted);}
+.spec-val{color:var(--text);}
+
+/* ══════════════════════════════
+   COMPARE PAGE
+══════════════════════════════ */
+.compare-page{padding:9rem 3rem 6rem;}
+.etsy-card-row{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));
+  gap:1px;background:var(--border);margin:3rem 0;
+  border:1px solid var(--border);
+}
+.etsy-card{background:var(--mid);padding:2rem;}
+.etsy-card-rank{
+  font-family:'Cormorant Garant',serif;font-size:3rem;
+  color:rgba(200,169,110,0.2);display:block;margin-bottom:0.3rem;
+}
+.etsy-card-name{color:var(--cream);font-family:'Cormorant Garant',serif;font-size:1.3rem;margin-bottom:0.4rem;}
+.etsy-card-meta{font-size:0.75rem;color:var(--muted);line-height:1.7;}
+.etsy-card-price{color:var(--gold);margin-top:0.7rem;font-size:0.85rem;}
+.vs-badge{
+  text-align:center;padding:3rem;
+  font-family:'Cormorant Garant',serif;font-size:5rem;
+  color:rgba(200,169,110,0.15);
+}
+
+/* ══════════════════════════════
+   ORDER PAGE
+══════════════════════════════ */
+.order-page{padding:9rem 3rem 6rem;max-width:840px;margin:0 auto;}
+.steps{margin:3rem 0;}
+.step{
+  display:flex;gap:2.5rem;align-items:flex-start;
+  padding:2.5rem 0;border-bottom:1px solid var(--border);
+}
+.step-num{
+  font-family:'Cormorant Garant',serif;
+  font-size:3.5rem;color:rgba(200,169,110,0.22);
+  line-height:1;min-width:60px;
+}
+.step-title{font-family:'Cormorant Garant',serif;font-size:1.6rem;color:var(--cream);margin-bottom:0.5rem;}
+.step-text{color:var(--muted);font-size:0.88rem;line-height:1.8;}
+.faq{margin-top:4rem;}
+.faq-item{padding:1.5rem 0;border-bottom:1px solid var(--border);}
+.faq-q{color:var(--cream);font-size:1rem;cursor:pointer;display:flex;justify-content:space-between;align-items:center;}
+.faq-q span{color:var(--gold);}
+.faq-a{color:var(--muted);font-size:0.88rem;line-height:1.8;padding-top:0.8rem;display:none;}
+.faq-item.open .faq-a{display:block;}
+.faq-item.open .faq-q span{transform:rotate(45deg);display:inline-block;}
+
+/* ══════════════════════════════
+   FOOTER
+══════════════════════════════ */
+footer{
+  background:var(--mid);border-top:1px solid var(--border);
+  padding:5rem 3rem 2rem;
+}
+.footer-grid{
+  display:grid;grid-template-columns:2fr 1fr 1fr 1fr;
+  gap:3rem;margin-bottom:3rem;
+}
+.footer-logo{
+  font-family:'Cormorant Garant',serif;font-size:1.7rem;
+  color:var(--gold);margin-bottom:1rem;letter-spacing:0.12em;
+}
+.footer-tagline{color:var(--muted);font-size:0.82rem;line-height:1.8;max-width:250px;}
+.footer-col h5{
+  color:var(--text);font-size:0.68rem;letter-spacing:0.18em;
+  text-transform:uppercase;margin-bottom:1.2rem;font-weight:500;
+}
+.footer-col a{
+  display:block;color:var(--muted);font-size:0.82rem;
+  margin-bottom:0.5rem;cursor:pointer;transition:color 0.2s;
+}
+.footer-col a:hover{color:var(--text);}
+.footer-bottom{
+  display:flex;align-items:center;justify-content:space-between;
+  padding-top:2rem;border-top:1px solid var(--border);
+  font-size:0.7rem;color:var(--muted);
+}
+
+/* ── LOADER ── */
+.loader-overlay{
+  position:fixed;inset:0;background:var(--dark);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  z-index:999;transition:opacity 0.6s;
+}
+.loader-overlay.hidden{opacity:0;pointer-events:none;}
+.loader-logo{
+  font-family:'Cormorant Garant',serif;font-size:2.2rem;
+  color:var(--gold);letter-spacing:0.25em;margin-bottom:2rem;
+}
+.loader-bar-wrap{width:160px;height:1px;background:var(--border);}
+.loader-bar{height:1px;background:var(--gold);width:0%;transition:width 0.05s;}
+
+/* ── RESPONSIVE ── */
+@media(max-width:1100px){
+  .collections-grid{grid-template-columns:repeat(3,1fr);}
+  .footer-grid{grid-template-columns:1fr 1fr;}
+}
+@media(max-width:850px){
+  nav{padding:1rem 1.5rem;}
+  .nav-links{display:none;}
+  .hero{grid-template-columns:1fr;padding:6rem 1.5rem 3rem;}
+  .hero-viewer{height:55vw;min-height:280px;order:-1;}
+  .hero-stat-row{gap:1.5rem;}
+  .section{padding:4rem 1.5rem;}
+  .collections-grid{grid-template-columns:repeat(2,1fr);}
+  .featured-strip{grid-template-columns:1fr;}
+  .cta-banner{margin:0 1.5rem 4rem;padding:3rem 2rem;}
+  .product-detail{grid-template-columns:1fr;}
+  .product-viewer-panel{position:relative;top:0;height:65vw;min-height:280px;}
+  .product-info-panel{padding:2rem 1.5rem;max-height:none;border-left:none;border-top:1px solid var(--border);}
+  .compare-page,.order-page{padding:7rem 1.5rem 4rem;}
+  .coll-header{padding:7rem 1.5rem 2.5rem;}
+  .sort-bar{padding:1rem 1.5rem;}
+  .footer-grid{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<!-- LOCAL FILE NOTICE -->
+<div id="local-notice">
+  <b>Tip:</b> For 3D previews to load, open this file through a local server.<br>
+  Run <code style="background:rgba(255,255,255,0.08);padding:0.1rem 0.4rem;">python -m http.server</code> in this folder, then visit <b>localhost:8000</b>
+  <button onclick="document.getElementById('local-notice').style.display='none'">✕</button>
+</div>
+
+<!-- LOADER -->
+<div class="loader-overlay" id="loader">
+  <div class="loader-logo">AESTHETEQ3D</div>
+  <div class="loader-bar-wrap"><div class="loader-bar" id="loader-bar"></div></div>
+</div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo" onclick="navigate('home')">AESTHETEQ3D</div>
+  <div class="nav-links">
+    <a onclick="navigate('collection','organic')">Organic</a>
+    <a onclick="navigate('collection','geometric')">Geometric</a>
+    <a onclick="navigate('collection','botanical')">Botanical</a>
+    <a onclick="navigate('collection','brutalist')">Brutalist</a>
+    <a onclick="navigate('collection','cosmic')">Cosmic</a>
+    <a onclick="navigate('compare')">vs Etsy</a>
+    <a onclick="navigate('order')">How to Order</a>
+  </div>
+  <button class="nav-cta" onclick="window.open('https://www.etsy.com/shop/AESTHETEQ3D','_blank')">Order Now</button>
+</nav>
+
+<!-- ══════════════════ HOME ══════════════════ -->
+<div class="page active" id="page-home">
+
+  <section class="hero">
+    <div class="hero-text">
+      <span class="hero-eyebrow">Handcrafted · 3D Printed · Made to Order</span>
+      <h1 class="hero-title">Where<br>Light<br>Becomes <em>Art</em></h1>
+      <p class="hero-sub">200 original sculpture lamps, each one a conversation between shadow and glow. Designed to be the most interesting object in any room — and the first thing anyone asks about.</p>
+      <div class="hero-actions">
+        <button class="btn-primary" onclick="navigate('collection','organic')">Explore the Collection</button>
+        <button class="btn-outline" onclick="navigate('order')">How to Order</button>
+      </div>
+      <div class="hero-stat-row">
+        <div><span class="hero-stat-val">200</span><span class="hero-stat-label">Unique Designs</span></div>
+        <div><span class="hero-stat-val">8</span><span class="hero-stat-label">Color Options</span></div>
+        <div><span class="hero-stat-val">3–5</span><span class="hero-stat-label">Day Delivery</span></div>
+      </div>
+    </div>
+    <div class="hero-viewer">
+      <model-viewer
+        src="./SCULPTURE_ASSEMBLY_42.glb"
+        alt="Featured AESTHETEQ3D sculpture lamp"
+        auto-rotate
+        camera-controls
+        environment-image="neutral"
+        shadow-intensity="1.2"
+        exposure="0.85"
+        rotation-per-second="14deg"
+        style="width:100%;height:100%;--poster-color:transparent;background:transparent;"
+      ></model-viewer>
+    </div>
+  </section>
+
+  <div class="marquee-strip">
+    <div class="marquee-inner">
+      <span>200 Unique Designs</span><span class="dot">◆</span>
+      <span>Organic Flow</span><span class="dot">◆</span>
+      <span>Geometric Minimal</span><span class="dot">◆</span>
+      <span>Botanical &amp; Floral</span><span class="dot">◆</span>
+      <span>Brutalist &amp; Architectural</span><span class="dot">◆</span>
+      <span>Cosmic &amp; Abstract</span><span class="dot">◆</span>
+      <span>Ships Assembled</span><span class="dot">◆</span>
+      <span>8 Colorways Per Design</span><span class="dot">◆</span>
+      <span>Free US Shipping</span><span class="dot">◆</span>
+      <span>200 Unique Designs</span><span class="dot">◆</span>
+      <span>Organic Flow</span><span class="dot">◆</span>
+      <span>Geometric Minimal</span><span class="dot">◆</span>
+      <span>Botanical &amp; Floral</span><span class="dot">◆</span>
+      <span>Brutalist &amp; Architectural</span><span class="dot">◆</span>
+      <span>Cosmic &amp; Abstract</span><span class="dot">◆</span>
+      <span>Ships Assembled</span><span class="dot">◆</span>
+      <span>8 Colorways Per Design</span><span class="dot">◆</span>
+      <span>Free US Shipping</span><span class="dot">◆</span>
+    </div>
+  </div>
+
+  <!-- COLLECTIONS -->
+  <section class="section">
+    <span class="section-label">Our Collections</span>
+    <h2 class="section-title">Five Worlds of Light</h2>
+    <p class="section-sub">Each collection is a distinct aesthetic universe — find the one that speaks to your space, your taste, your story.</p>
+    <div class="collections-grid" id="home-coll-grid"></div>
+  </section>
+
+  <!-- FEATURED -->
+  <section class="section" style="padding-top:0;">
+    <span class="section-label">Featured Pieces</span>
+    <h2 class="section-title">Picked for You</h2>
+    <div class="featured-strip" id="featured-strip"></div>
+  </section>
+
+  <!-- WHY US -->
+  <section class="section" style="background:var(--mid);">
+    <span class="section-label">Why AESTHETEQ3D</span>
+    <h2 class="section-title">Not Just a Lamp</h2>
+    <p class="section-sub">Every piece is a sculpture first. The light is what makes it unforgettable.</p>
+    <div class="why-grid">
+      <div class="why-card"><span class="why-icon">✦</span><div class="why-title">Sculpture First</div><div class="why-text">Designed as sculpture that holds light — not a lamp that looks interesting. The difference shows immediately.</div></div>
+      <div class="why-card"><span class="why-icon">◈</span><div class="why-title">200 Exclusive Forms</div><div class="why-text">Our entire catalog is original. Every design ID is a unique assembly you won't find anywhere else on Earth.</div></div>
+      <div class="why-card"><span class="why-icon">⬡</span><div class="why-title">Ships Ready to Use</div><div class="why-text">Fully assembled, tested, and packed for your shelf. Plug in and place. No printing, no assembly, no guesswork.</div></div>
+      <div class="why-card"><span class="why-icon">◎</span><div class="why-title">8 Custom Colors</div><div class="why-text">Cream White, Warm Sand, Slate, Forest, Navy, Blush, Obsidian, Terracotta — choose at checkout.</div></div>
+      <div class="why-card"><span class="why-icon">⌬</span><div class="why-title">Live 3D Preview</div><div class="why-text">Spin every lamp in 360° before you buy. See exactly how light will travel through the form in your room.</div></div>
+      <div class="why-card"><span class="why-icon">↻</span><div class="why-title">Made to Order</div><div class="why-text">Each lamp is printed for you specifically. This isn't warehouse stock — it's made because you chose it.</div></div>
+    </div>
+  </section>
+
+  <!-- COMPARE -->
+  <section class="section">
+    <span class="section-label">How We Compare</span>
+    <h2 class="section-title">Better Than Etsy's Best</h2>
+    <p class="section-sub">Etsy's top 3D lamp sellers ship you a file. You print it, fix the stringing, sand it, wire it, and hope for the best. We ship the finished lamp.</p>
+    <div class="compare-wrap">
+      <table class="compare-table">
+        <thead>
+          <tr>
+            <th>Feature</th>
+            <th style="color:#C8A96E">AESTHETEQ3D ✦</th>
+            <th>Etsy STL Files (Borovia, Sophia…)</th>
+            <th>Generic Amazon Lamps</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="hl"><td>Ready to display</td><td class="check">✔ Ships assembled</td><td class="cross">✗ Print &amp; build yourself</td><td class="check">✔ Assembled</td></tr>
+          <tr><td>Unique sculpture form</td><td class="check">✔ 200 exclusive designs</td><td class="half">◐ Limited catalog</td><td class="cross">✗ Mass produced</td></tr>
+          <tr class="hl"><td>Color choice</td><td class="check">✔ 8 options per design</td><td class="cross">✗ Your filament only</td><td class="cross">✗ Fixed colors</td></tr>
+          <tr><td>Quality control</td><td class="check">✔ Every piece inspected</td><td class="cross">✗ DIY — varies wildly</td><td class="half">◐ Varies</td></tr>
+          <tr class="hl"><td>3D preview before buying</td><td class="check">✔ Live interactive viewer</td><td class="half">◐ Static renders only</td><td class="cross">✗ Photos only</td></tr>
+          <tr><td>No printer needed</td><td class="check">✔ We handle everything</td><td class="cross">✗ Need a 3D printer</td><td class="check">✔ Yes</td></tr>
+          <tr class="hl"><td>Starting price</td><td>From $89</td><td>$8–$25 (+ filament + time)</td><td>$25–$70</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="margin-top:1.5rem;font-size:0.82rem;color:var(--muted);">Etsy's most-favorited 3D lamp design (Borovia — 410+ favorites) is a $15 STL file. Beautiful design — but you're on your own from there. We sell it finished.</p>
+  </section>
+
+  <!-- CTA -->
+  <div class="cta-banner">
+    <div>
+      <h2>Ready to find your lamp?</h2>
+      <p>Browse 200 designs. Spin them in 3D. Order in three clicks.</p>
+    </div>
+    <a class="cta-store-btn" href="https://www.etsy.com/shop/AESTHETEQ3D" target="_blank">Visit AESTHETEQ3D Store →</a>
+  </div>
+
+  <footer>
+    <div class="footer-grid">
+      <div>
+        <div class="footer-logo">AESTHETEQ3D</div>
+        <p class="footer-tagline">Sculpture lamps designed to stop you mid-room. Made to order, shipped ready to display. Free US shipping on every piece.</p>
+      </div>
+      <div class="footer-col">
+        <h5>Collections</h5>
+        <a onclick="navigate('collection','organic')">Organic Flow</a>
+        <a onclick="navigate('collection','geometric')">Geometric Minimal</a>
+        <a onclick="navigate('collection','botanical')">Botanical &amp; Floral</a>
+        <a onclick="navigate('collection','brutalist')">Brutalist</a>
+        <a onclick="navigate('collection','cosmic')">Cosmic &amp; Abstract</a>
+      </div>
+      <div class="footer-col">
+        <h5>Info</h5>
+        <a onclick="navigate('compare')">vs Etsy Comparison</a>
+        <a onclick="navigate('order')">How to Order</a>
+        <a href="https://www.etsy.com/shop/AESTHETEQ3D" target="_blank">Open Etsy Store</a>
+      </div>
+      <div class="footer-col">
+        <h5>Support</h5>
+        <a>Free US Shipping</a>
+        <a>14-Day Returns</a>
+        <a>Custom Colors</a>
+        <a href="https://www.etsy.com/shop/AESTHETEQ3D" target="_blank">Message Us on Etsy</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 AESTHETEQ3D. All rights reserved.</span>
+      <span>Made with light &amp; precision.</span>
+    </div>
+  </footer>
+</div>
+
+<!-- ══════════════════ COLLECTION ══════════════════ -->
+<div class="page" id="page-collection">
+  <div class="coll-header">
+    <div class="coll-header-inner">
+      <div>
+        <span class="section-label" id="coll-label"></span>
+        <h2 style="color:var(--cream)" id="coll-title"></h2>
+        <span class="coll-tagline" id="coll-tagline"></span>
+      </div>
+      <p class="coll-header-desc" id="coll-desc"></p>
+    </div>
+  </div>
+  <div class="sort-bar">
+    <span class="sort-bar-count" id="coll-count"></span>
+    <div class="sort-btns">
+      <button class="sort-btn active" onclick="sortBy(this,'default')">Default</button>
+      <button class="sort-btn" onclick="sortBy(this,'price-asc')">Price ↑</button>
+      <button class="sort-btn" onclick="sortBy(this,'price-desc')">Price ↓</button>
+    </div>
+  </div>
+  <div class="product-grid" id="product-grid"></div>
+  <div class="pagination" id="pagination"></div>
+
+  <div style="background:var(--mid);padding:4rem 3rem;margin-top:2px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:2rem;border-top:1px solid var(--border)">
+    <div>
+      <h3 style="color:var(--cream);margin-bottom:0.4rem">Ready to order?</h3>
+      <p style="color:var(--muted);font-size:0.88rem">Click any lamp above to see it in full 3D, then order directly from our store.</p>
+    </div>
+    <a class="cta-store-btn" href="https://www.etsy.com/shop/AESTHETEQ3D" target="_blank">AESTHETEQ3D Store →</a>
+  </div>
+
+  <footer>
+    <div class="footer-grid">
+      <div><div class="footer-logo">AESTHETEQ3D</div><p class="footer-tagline">Sculpture lamps — made to order, shipped assembled.</p></div>
+      <div class="footer-col"><h5>Collections</h5><a onclick="navigate('collection','organic')">Organic Flow</a><a onclick="navigate('collection','geometric')">Geometric</a><a onclick="navigate('collection','botanical')">Botanical</a><a onclick="navigate('collection','brutalist')">Brutalist</a><a onclick="navigate('collection','cosmic')">Cosmic</a></div>
+      <div class="footer-col"><h5>Info</h5><a onclick="navigate('home')">Home</a><a onclick="navigate('compare')">vs Etsy</a><a onclick="navigate('order')">How to Order</a></div>
+      <div class="footer-col"><h5>Store</h5><a href="https://www.etsy.com/shop/AESTHETEQ3D" target="_blank">Order on Etsy</a><a>Free US Shipping</a><a>Custom Colors</a></div>
+    </div>
+    <div class="footer-bottom"><span>© 2026 AESTHETEQ3D</span><span>Made with light &amp; precision.</span></div>
+  </footer>
+</div>
+
+<!-- ══════════════════ PRODUCT DETAIL ══════════════════ -->
+<div class="page" id="page-product">
+  <div class="product-detail">
+    <div class="product-viewer-panel">
+      <model-viewer id="detail-viewer"
+        alt="Sculpture lamp"
+        auto-rotate camera-controls
+        environment-image="neutral"
+        shadow-intensity="1.4" exposure="0.9"
+        rotation-per-second="10deg"
+        style="width:100%;height:100%;--poster-color:transparent;background:transparent;"
+      ></model-viewer>
+    </div>
+    <div class="product-info-panel">
+      <div class="product-breadcrumb" id="detail-breadcrumb">← Back to Collection</div>
+      <h1 class="product-detail-name" id="detail-name"></h1>
+      <span class="product-detail-sku" id="detail-sku"></span>
+      <div class="product-detail-price" id="detail-price"></div>
+      <p class="product-detail-desc" id="detail-desc"></p>
+
+      <div class="detail-section">
+        <span class="detail-section-label">Choose Color</span>
+        <div class="color-options">
+          <div class="color-opt active" style="background:#F5F0E8" data-name="Cream White"></div>
+          <div class="color-opt" style="background:#D4C4A0" data-name="Warm Sand"></div>
+          <div class="color-opt" style="background:#6B7B8D" data-name="Slate"></div>
+          <div class="color-opt" style="background:#4A6741" data-name="Forest"></div>
+          <div class="color-opt" style="background:#2E4A6B" data-name="Navy"></div>
+          <div class="color-opt" style="background:#C89090" data-name="Blush"></div>
+          <div class="color-opt" style="background:#1C1814" data-name="Obsidian"></div>
+          <div class="color-opt" style="background:#A85030" data-name="Terracotta"></div>
+        </div>
+        <div class="color-name" id="color-name">Cream White</div>
+      </div>
+
+      <div class="detail-section">
+        <span class="detail-section-label">Choose Size</span>
+        <div class="size-options">
+          <button class="size-opt active" data-size="S">S — Desk (8")</button>
+          <button class="size-opt" data-size="M">M — Side Table (12")</button>
+          <button class="size-opt" data-size="L">L — Floor (18")</button>
+        </div>
+      </div>
+
+      <button class="order-btn" id="detail-order-btn">Order via AESTHETEQ3D →</button>
+      <p class="order-note">Takes you to our Etsy store · Free US shipping · 3–5 day delivery</p>
+
+      <div class="product-specs">
+        <span class="detail-section-label">Specifications</span>
+        <div class="spec-row"><span class="spec-label">Material</span><span class="spec-val">PLA+ / PETG Filament</span></div>
+        <div class="spec-row"><span class="spec-label">Light Source</span><span class="spec-val">E26 LED Compatible</span></div>
+        <div class="spec-row"><span class="spec-label">Assembly</span><span class="spec-val">Fully assembled &amp; tested</span></div>
+        <div class="spec-row"><span class="spec-label">Production Time</span><span class="spec-val">3–5 business days</span></div>
+        <div class="spec-row"><span class="spec-label">Ships From</span><span class="spec-val">United States</span></div>
+        <div class="spec-row" id="detail-spec-id"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════ COMPARE ══════════════════ -->
+<div class="page" id="page-compare">
+  <div class="compare-page">
+    <span class="section-label">In-Depth Comparison</span>
+    <h2 style="color:var(--cream);margin-bottom:1rem">Why Buyers Choose Us<br>Over Etsy's Top Sellers</h2>
+    <p style="color:var(--muted);max-width:560px;font-size:0.92rem;line-height:1.85;margin-bottom:1rem">
+      Etsy's biggest 3D lamp names — Borovia (410+ favorites), Sophia, Monroe, Morchel, SILO — are all STL digital downloads. You buy a file, not a lamp. You need a printer, filament, hours of printing time, sanding, and assembly skills. Then hope it works.
+    </p>
+    <p style="color:var(--muted);max-width:560px;font-size:0.92rem;line-height:1.85">
+      We sell the finished lamp. Printed, assembled, inspected, packed. Just plug in and place.
+    </p>
+
+    <h3 style="color:var(--cream);margin:3rem 0 1rem">What Etsy's Top Sellers Actually Are</h3>
+    <div class="etsy-card-row">
+      <div class="etsy-card"><span class="etsy-card-rank">#1</span><div class="etsy-card-name">Borovia</div><div class="etsy-card-meta">410+ favorites · STL digital file · You print &amp; build<br>Beautiful design, but DIY from start to finish</div><div class="etsy-card-price">$15 file → + your time + printer + filament</div></div>
+      <div class="etsy-card"><span class="etsy-card-rank">#2</span><div class="etsy-card-name">Sophia</div><div class="etsy-card-meta">113+ favorites · STL digital file · Bambu Lab optimized<br>Great for makers with a printer on hand</div><div class="etsy-card-price">$12 file → + your time + printer + filament</div></div>
+      <div class="etsy-card"><span class="etsy-card-rank">#3</span><div class="etsy-card-name">Monroe</div><div class="etsy-card-meta">Popular listing · STL digital file · Modern minimal<br>Still — you print it, wire it, finish it</div><div class="etsy-card-price">$14 file → + your time + printer + filament</div></div>
+      <div class="etsy-card"><span class="etsy-card-rank">#4</span><div class="etsy-card-name">Morchel</div><div class="etsy-card-meta">111+ favorites · STL digital file · Organic shape<br>Great design — but still DIY</div><div class="etsy-card-price">$13 file → + your time + printer + filament</div></div>
+      <div class="etsy-card"><span class="etsy-card-rank">#5</span><div class="etsy-card-name">SILO</div><div class="etsy-card-meta">141+ favorites · STL file · Architectural form<br>You need a printer, supports removal, assembly</div><div class="etsy-card-price">$16 file → + your time + printer + filament</div></div>
+    </div>
+
+    <div class="vs-badge">vs.</div>
+
+    <h3 style="color:var(--cream);margin-bottom:1rem">What AESTHETEQ3D Offers</h3>
+    <div class="why-grid" style="margin-top:0;margin-bottom:3rem;">
+      <div class="why-card"><span class="why-icon" style="color:var(--gold)">200</span><div class="why-title">Finished Lamp Designs</div><div class="why-text">Not files. Not kits. Complete, assembled, tested lamps. 200 exclusive forms not available anywhere else.</div></div>
+      <div class="why-card"><span class="why-icon" style="color:var(--gold)">8</span><div class="why-title">Colors Per Design</div><div class="why-text">Pick your colorway at checkout. Every design ships in any of our 8 filament colors at no extra cost.</div></div>
+      <div class="why-card"><span class="why-icon" style="color:var(--gold)">3D</span><div class="why-title">Live Interactive Preview</div><div class="why-text">Spin every lamp 360° before you buy — in the exact form it will ship. No surprises.</div></div>
+      <div class="why-card"><span class="why-icon" style="color:var(--gold)">3–5</span><div class="why-title">Days to Your Door</div><div class="why-text">From order confirmation to your shelf: 3–5 business days. A DIY print takes that long just to run.</div></div>
+    </div>
+
+    <div class="compare-wrap">
+      <table class="compare-table">
+        <thead><tr><th>Category</th><th style="color:var(--gold)">AESTHETEQ3D</th><th>Etsy Top STL Files</th><th>Generic Amazon</th></tr></thead>
+        <tbody>
+          <tr class="hl"><td>Product delivered</td><td class="check">✔ Finished lamp</td><td class="cross">✗ Digital file</td><td class="check">✔ Finished lamp</td></tr>
+          <tr><td>Needs 3D printer</td><td class="check">✔ No</td><td class="cross">✗ Yes</td><td class="check">✔ No</td></tr>
+          <tr class="hl"><td>Assembly required</td><td class="check">✔ None — plug &amp; play</td><td class="cross">✗ Hours of work</td><td class="half">◐ Minimal</td></tr>
+          <tr><td>Design exclusivity</td><td class="check">✔ 200 original forms</td><td class="cross">✗ Anyone can print the same file</td><td class="cross">✗ Mass produced</td></tr>
+          <tr class="hl"><td>Color options</td><td class="check">✔ 8 per design</td><td class="cross">✗ Your filament</td><td class="cross">✗ Fixed</td></tr>
+          <tr><td>Quality inspection</td><td class="check">✔ Every piece</td><td class="cross">✗ DIY quality varies</td><td class="half">◐ Varies</td></tr>
+          <tr class="hl"><td>3D viewer</td><td class="check">✔ Live interactive</td><td class="half">◐ Renders only</td><td class="cross">✗ Photos</td></tr>
+          <tr><td>Returns policy</td><td class="check">✔ 14 days</td><td class="cross">✗ Digital — no returns</td><td class="half">◐ Varies</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div style="margin-top:4rem;text-align:center;">
+      <h3 style="color:var(--cream);margin-bottom:1.5rem">The bottom line: skip the printer, get the lamp.</h3>
+      <a class="cta-store-btn" href="https://www.etsy.com/shop/AESTHETEQ3D" target="_blank" style="display:inline-block;">Shop AESTHETEQ3D →</a>
+    </div>
+  </div>
+  <footer>
+    <div class="footer-grid">
+      <div><div class="footer-logo">AESTHETEQ3D</div><p class="footer-tagline">Sculpture lamps — made to order, shipped assembled.</p></div>
+      <div class="footer-col"><h5>Collections</h5><a onclick="navigate('collection','organic')">Organic Flow</a><a onclick="navigate('collection','geometric')">Geometric</a><a onclick="navigate('collection','botanical')">Botanical</a><a onclick="navigate('collection','brutalist')">Brutalist</a><a onclick="navigate('collection','cosmic')">Cosmic</a></div>
+      <div class="footer-col"><h5>Info</h5><a onclick="navigate('home')">Home</a><a onclick="navigate('order')">How to Order</a><a href="https://www.etsy.com/shop/AESTHETEQ3D" target="_blank">Etsy Store</a></div>
+      <div class="footer-col"><h5>Contact</h5><a href="https://www.etsy.com/shop/AESTHETEQ3D" target="_blank">Message on Etsy</a><a>Free US Shipping</a><a>Custom Colors Available</a></div>
+    </div>
+    <div class="footer-bottom"><span>© 2026 AESTHETEQ3D</span><span>Made with light &amp; precision.</span></div>
+  </footer>
+</div>
+
+<!-- ══════════════════ ORDER ══════════════════ -->
+<div class="page" id="page-order">
+  <div class="order-page">
+    <span class="section-label">Ordering is Simple</span>
+    <h2 style="color:var(--cream);margin-bottom:1rem">From Browse to<br>Doorstep in Four Steps</h2>
+    <p style="color:var(--muted);max-width:500px;font-size:0.92rem;line-height:1.85">No technical knowledge. No printer. No assembly. Just pick the lamp you love and tell us how you want it.</p>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">01</div>
+        <div>
+          <div class="step-title">Browse &amp; Pick Your Sculpture</div>
+          <p class="step-text">Explore our five collections — Organic, Geometric, Botanical, Brutalist, Cosmic. Use the live 3D viewer on any product page to spin the lamp around and see exactly how it looks from every angle. Take your time — there are 200 to discover.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">02</div>
+        <div>
+          <div class="step-title">Choose Your Color &amp; Size</div>
+          <p class="step-text">Pick one of 8 filament colors (Cream White, Warm Sand, Slate, Forest, Navy, Blush, Obsidian, Terracotta) and your preferred size (Desk 8", Side Table 12", Floor 18"). Note your choices — you'll enter them in the order notes.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">03</div>
+        <div>
+          <div class="step-title">Order on AESTHETEQ3D Store</div>
+          <p class="step-text">Click "Order via AESTHETEQ3D" on any product page — you'll be taken directly to our Etsy store listing. Add to cart, enter your color and size in the "note to seller" field at checkout, and place your order. We confirm and begin printing within 24 hours.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">04</div>
+        <div>
+          <div class="step-title">Receive &amp; Display</div>
+          <p class="step-text">Your lamp arrives fully assembled and carefully packed within 3–5 business days. Plug into any standard E26 socket. Place it. Watch everyone ask where you got it.</p>
+        </div>
+      </div>
+    </div>
+
+    <div style="text-align:center;margin:3rem 0;">
+      <a class="cta-store-btn" href="https://www.etsy.com/shop/AESTHETEQ3D" target="_blank" style="display:inline-block;font-size:0.9rem;padding:1.4rem 4rem;">Open AESTHETEQ3D Store →</a>
+      <p style="color:var(--muted);margin-top:1rem;font-size:0.8rem;">Questions? Message us on Etsy — we reply within 2 hours.</p>
+    </div>
+
+    <div class="why-grid" style="margin-top:0;">
+      <div class="why-card"><span class="why-icon">📦</span><div class="why-title">Free US Shipping</div><div class="why-text">Every order ships free within the United States. International shipping available — see store for current rates.</div></div>
+      <div class="why-card"><span class="why-icon">🔄</span><div class="why-title">14-Day Returns</div><div class="why-text">Not quite right? Contact us within 14 days. We'll arrange a replacement, exchange, or full refund — no hassle.</div></div>
+      <div class="why-card"><span class="why-icon">🎨</span><div class="why-title">Custom Requests</div><div class="why-text">Want a color we don't list? Different size? A gift message? Message us on Etsy — most custom requests are possible.</div></div>
+      <div class="why-card"><span class="why-icon">⚡</span><div class="why-title">Fast Production</div><div class="why-text">We begin printing your lamp within 24 hours of order confirmation. Total delivery: 3–5 business days.</div></div>
+    </div>
+
+    <div class="faq" style="margin-top:4rem;">
+      <h3 style="color:var(--cream);margin-bottom:2rem">Frequently Asked Questions</h3>
+      <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Do I need any tools or technical skills to set it up?<span>+</span></div><div class="faq-a">None at all. Every lamp ships fully assembled with the electrical cord already attached. You just screw in an E26 LED bulb (included) and plug it in. That's it.</div></div>
+      <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Can I choose a specific lamp I see on this website?<span>+</span></div><div class="faq-a">Yes! Click any lamp to open its product page, note the design name (e.g. "Aurora Spiral — SKU-104855"), then mention it in the order notes on our Etsy store. We'll print that exact design for you.</div></div>
+      <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">What if the color looks different in person than on screen?<span>+</span></div><div class="faq-a">Screen colors vary, so we offer a 14-day return/exchange policy. If the color isn't exactly what you expected, contact us and we'll make it right — no questions asked.</div></div>
+      <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">How fragile are the lamps?<span>+</span></div><div class="faq-a">Printed in PLA+ or PETG, our lamps are more durable than they look. Normal household use — moving, dusting, occasional bumps — is no problem. We wouldn't recommend dropping them from height, but they're designed for real living spaces.</div></div>
+      <div class="faq-item"><div class="faq-q" onclick="toggleFaq(this)">Can I order a lamp as a gift?<span>+</span></div><div class="faq-a">Absolutely. Add a gift message in the order notes and we'll include a handwritten card. We also offer gift wrapping — just ask when ordering.</div></div>
+    </div>
+  </div>
+  <footer>
+    <div class="footer-grid">
+      <div><div class="footer-logo">AESTHETEQ3D</div><p class="footer-tagline">Sculpture lamps — made to order, shipped assembled.</p></div>
+      <div class="footer-col"><h5>Collections</h5><a onclick="navigate('collection','organic')">Organic Flow</a><a onclick="navigate('collection','geometric')">Geometric</a><a onclick="navigate('collection','botanical')">Botanical</a><a onclick="navigate('collection','brutalist')">Brutalist</a><a onclick="navigate('collection','cosmic')">Cosmic</a></div>
+      <div class="footer-col"><h5>Info</h5><a onclick="navigate('home')">Home</a><a onclick="navigate('compare')">vs Etsy</a><a href="https://www.etsy.com/shop/AESTHETEQ3D" target="_blank">Etsy Store</a></div>
+      <div class="footer-col"><h5>Contact</h5><a href="https://www.etsy.com/shop/AESTHETEQ3D" target="_blank">Message on Etsy</a><a>Free US Shipping</a><a>Custom Colors Available</a></div>
+    </div>
+    <div class="footer-bottom"><span>© 2026 AESTHETEQ3D</span><span>Made with light &amp; precision.</span></div>
+  </footer>
+</div>
+
+<!-- ══════════════════ JAVASCRIPT ══════════════════ -->
+<script>
+// ── DATA ──
+const COLLECTIONS = {
+  organic: {
+    name: "Organic Flow", tagline: "Sculptures that breathe",
+    description: "Inspired by nature's own geometry — ocean currents, wind patterns, and the spiral logic of growth. These lamps feel alive. Each one catches light differently depending on where you stand.",
+    color: "#C8A96E", emoji: "〰",
+    ids: [104855,106081,106329,109511,112851,119943,123,125247,125992,132347,142616,148677,15063,152303,155933,158155,163705,164211,167783,169002,172436,172616,174667,181076,187793,191957,196001,196526,202613,207341,207521,214125,215748,220435,224606,224918,228388,240388,243741,246572]
+  },
+  geometric: {
+    name: "Geometric Minimal", tagline: "Architecture you can live with",
+    description: "Clean lines, precise angles, and a quiet confidence. Designed for spaces that value restraint as much as beauty. Where every edge is intentional and every shadow is earned.",
+    color: "#8BBCD4", emoji: "◈",
+    ids: [248249,248363,24958,254280,256860,257531,26650,268732,269241,277444,281367,285022,286713,288068,289918,29244,293639,299985,305839,307095,317093,324369,32803,328791,339304,340203,352349,358437,365970,366287,373462,374100,374106,379078,383060,394632,394788,407643,419492,42]
+  },
+  botanical: {
+    name: "Botanical & Floral", tagline: "Nature frozen in light",
+    description: "Petal folds, leaf veins, and seed spirals translated into glowing sculpture. For the space that deserves something living. Forms borrowed from the garden, given permanence in light.",
+    color: "#7DC9A0", emoji: "✿",
+    ids: [420132,422039,433974,436968,451479,45498,466367,489021,492220,498355,499247,505353,505707,509978,521483,52173,525368,536106,542102,553394,557243,558453,560610,560686,564179,568236,57511,575730,584959,587479,602622,603677,605196,609715,615701,616,617485,623989,626804,631308]
+  },
+  brutalist: {
+    name: "Brutalist & Architectural", tagline: "Raw form. Refined purpose.",
+    description: "Honest materials, uncompromising structure. These lamps don't ask for attention — they command it. Inspired by the poetry of concrete, steel, and exposed form.",
+    color: "#B0A090", emoji: "⬡",
+    ids: [634756,640538,643017,643282,646969,647565,655315,660604,661131,661531,665136,687875,689464,691852,697029,702271,702674,709599,713097,716795,724561,739210,741751,744222,745246,754449,759144,770331,779434,781992,782023,785476,785939,790618,795887,800236,801091,813158,818198,82141]
+  },
+  cosmic: {
+    name: "Cosmic & Abstract", tagline: "Light from elsewhere",
+    description: "Forms that suggest galaxies, fractals, and forces invisible to the eye. These lamps feel like they arrived from somewhere outside the ordinary. The lamp as portal to another scale of reality.",
+    color: "#A08BC8", emoji: "✦",
+    ids: [822895,828876,830462,832231,838273,838866,848451,851643,85841,861700,863965,866088,877964,883018,8888,889022,899495,902352,903493,905076,910017,911252,911788,912876,918965,9259,930474,937528,949683,961735,975532,979362,981757,982616,986206,990831,993757,995677,997098,999569]
+  }
+};
+
+const ADJS = ['Aurora','Cascade','Eclipse','Nebula','Prism','Solstice','Zenith','Apex','Lumina','Vortex','Onyx','Ember','Crystal','Solaris','Nova','Lunar','Stellar','Radiant','Velvet','Obsidian','Celeste','Drift','Silhouette','Reverie','Liminal','Phantom','Halcyon','Aureate','Dusk','Zephyr'];
+const NOUNS = ['Tower','Spiral','Wave','Arc','Flow','Bloom','Ridge','Peak','Form','Pillar','Curve','Rise','Shard','Pulse','Grove','Vessel','Crest','Halo','Orbit','Rift','Plinth','Veil','Column','Strand','Coil','Lattice','Prism','Shell','Finial','Spire'];
+const DESCS = [
+  "A sweeping form that catches warm light and diffuses it through every twist and overhang. Place it where shadows matter as much as brightness.",
+  "Composed with deliberate restraint — every surface angle calculated to cast the perfect shadow as the day changes around it.",
+  "Its structure suggests something grown rather than designed: a form that took its own time to arrive at its final shape.",
+  "Vertical ambition expressed in filament. The eye travels upward and doesn't stop until the glow pulls it back down to earth.",
+  "Complex at a glance, meditative the longer you look. A lamp that rewards patience and repays attention.",
+  "Designed to look at home in a gallery and light up a living room in equal measure. Comfort and art, unified.",
+  "The negative space is as deliberate as the form itself. What's absent defines what's present.",
+  "A conversation between weight and lightness — anchored at the base and gently dissolving toward the light source above.",
+  "Light doesn't just escape this form — it performs. Every angle of the room sees something different.",
+  "Structured like a sentence with perfect grammar: nothing extra, nothing missing, everything in exactly the right place.",
+];
+
+function getName(id) {
+  return ADJS[id % ADJS.length] + ' ' + NOUNS[Math.floor(id / 97) % NOUNS.length];
+}
+function getPrice(id) {
+  return [89,99,109,119,129,139,149,159,169,179,189][id % 11];
+}
+function getDesc(id) { return DESCS[id % DESCS.length]; }
+function getCollKey(id) {
+  for (const [k,c] of Object.entries(COLLECTIONS)) if (c.ids.includes(Number(id))) return k;
+  return 'organic';
+}
+
+// ── STATE ──
+let curColl = 'organic', curPage = 1, curSort = 'default';
+const PER = 12;
+
+// ── ROUTER ──
+function navigate(page, param) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  window.scrollTo(0,0);
+  if (page === 'home') {
+    document.getElementById('page-home').classList.add('active');
+  } else if (page === 'collection') {
+    curColl = param || 'organic'; curPage = 1; curSort = 'default';
+    document.querySelectorAll('.sort-btn').forEach((b,i) => b.classList.toggle('active', i===0));
+    renderCollection();
+    document.getElementById('page-collection').classList.add('active');
+  } else if (page === 'product') {
+    renderProduct(param);
+    document.getElementById('page-product').classList.add('active');
+  } else if (page === 'compare') {
+    document.getElementById('page-compare').classList.add('active');
+  } else if (page === 'order') {
+    document.getElementById('page-order').classList.add('active');
+  }
+}
+
+// ── HOME: COLLECTION CARDS ──
+function renderHomeCollections() {
+  const g = document.getElementById('home-coll-grid');
+  g.innerHTML = Object.entries(COLLECTIONS).map(([k,c]) => `
+    <div class="coll-card" onclick="navigate('collection','${k}')">
+      <model-viewer src="./SCULPTURE_ASSEMBLY_${c.ids[2]}.glb"
+        alt="${c.name}" auto-rotate camera-controls
+        environment-image="neutral" shadow-intensity="1" exposure="0.75"
+        rotation-per-second="12deg" loading="lazy"
+        style="width:100%;height:100%;--poster-color:transparent;background:transparent;"
+      ></model-viewer>
+      <div class="coll-card-overlay">
+        <span class="coll-card-tag" style="color:${c.color}">${c.emoji} ${c.ids.length} designs</span>
+        <span class="coll-card-name">${c.name}</span>
+        <span class="coll-card-sub">${c.tagline}</span>
+        <span class="coll-card-btn">Explore Collection →</span>
+      </div>
+    </div>`).join('');
+}
+
+function renderFeatured() {
+  const picks = [
+    {id:615701, coll:'botanical'},
+    {id:42, coll:'geometric'},
+    {id:912876, coll:'cosmic'},
+  ];
+  document.getElementById('featured-strip').innerHTML = `
+    <div class="featured-card tall" onclick="navigate('product',${picks[0].id})">
+      <model-viewer src="./SCULPTURE_ASSEMBLY_${picks[0].id}.glb"
+        auto-rotate camera-controls environment-image="neutral"
+        shadow-intensity="1" exposure="0.8" rotation-per-second="10deg" loading="lazy"
+        style="width:100%;height:100%;--poster-color:transparent;background:transparent;"
+      ></model-viewer>
+      <div class="featured-card-label"><b>${getName(picks[0].id)}</b>Botanical &amp; Floral · $${getPrice(picks[0].id)}</div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:2px;">
+      <div class="featured-card wide" onclick="navigate('product',${picks[1].id})">
+        <model-viewer src="./SCULPTURE_ASSEMBLY_${picks[1].id}.glb"
+          auto-rotate camera-controls environment-image="neutral"
+          shadow-intensity="1" exposure="0.8" rotation-per-second="10deg" loading="lazy"
+          style="width:100%;height:100%;--poster-color:transparent;background:transparent;"
+        ></model-viewer>
+        <div class="featured-card-label"><b>${getName(picks[1].id)}</b>Geometric · $${getPrice(picks[1].id)}</div>
+      </div>
+      <div class="featured-card wide" onclick="navigate('product',${picks[2].id})">
+        <model-viewer src="./SCULPTURE_ASSEMBLY_${picks[2].id}.glb"
+          auto-rotate camera-controls environment-image="neutral"
+          shadow-intensity="1" exposure="0.8" rotation-per-second="10deg" loading="lazy"
+          style="width:100%;height:100%;--poster-color:transparent;background:transparent;"
+        ></model-viewer>
+        <div class="featured-card-label"><b>${getName(picks[2].id)}</b>Cosmic &amp; Abstract · $${getPrice(picks[2].id)}</div>
+      </div>
+    </div>
+    <div class="featured-card tall" onclick="navigate('product',${picks[0].id+1000})">
+      <model-viewer src="./SCULPTURE_ASSEMBLY_${COLLECTIONS.organic.ids[5]}.glb"
+        auto-rotate camera-controls environment-image="neutral"
+        shadow-intensity="1" exposure="0.8" rotation-per-second="10deg" loading="lazy"
+        style="width:100%;height:100%;--poster-color:transparent;background:transparent;"
+      ></model-viewer>
+      <div class="featured-card-label"><b>${getName(COLLECTIONS.organic.ids[5])}</b>Organic Flow · $${getPrice(COLLECTIONS.organic.ids[5])}</div>
+    </div>
+  `;
+}
+
+// ── COLLECTION PAGE ──
+function renderCollection() {
+  const c = COLLECTIONS[curColl];
+  document.getElementById('coll-label').textContent = c.emoji + ' ' + c.ids.length + ' designs';
+  document.getElementById('coll-title').textContent = c.name;
+  document.getElementById('coll-tagline').textContent = c.tagline;
+  document.getElementById('coll-desc').textContent = c.description;
+
+  let ids = [...c.ids];
+  if (curSort === 'price-asc') ids.sort((a,b) => getPrice(a)-getPrice(b));
+  if (curSort === 'price-desc') ids.sort((a,b) => getPrice(b)-getPrice(a));
+
+  const total = ids.length;
+  const totalPages = Math.ceil(total/PER);
+  const slice = ids.slice((curPage-1)*PER, curPage*PER);
+
+  document.getElementById('coll-count').textContent = `Showing ${(curPage-1)*PER+1}–${Math.min(curPage*PER, total)} of ${total} designs`;
+
+  document.getElementById('product-grid').innerHTML = slice.map(id => `
+    <div class="product-card" onclick="navigate('product',${id})">
+      <div class="product-card-viewer">
+        <model-viewer src="./SCULPTURE_ASSEMBLY_${id}.glb"
+          alt="${getName(id)}" auto-rotate camera-controls
+          environment-image="neutral" shadow-intensity="0.8" exposure="0.75"
+          rotation-per-second="10deg" loading="lazy"
+          style="width:100%;height:100%;--poster-color:transparent;background:transparent;"
+        ></model-viewer>
+      </div>
+      <div class="product-card-info">
+        <span class="product-card-name">${getName(id)}</span>
+        <span class="product-card-sku">SKU-${id} · ${c.name}</span>
+        <div class="product-card-footer">
+          <span class="product-card-price">$${getPrice(id)}</span>
+          <button class="product-card-cta" onclick="event.stopPropagation();navigate('product',${id})">View in 3D →</button>
+        </div>
+      </div>
+    </div>`).join('');
+
+  let pag = '';
+  if (curPage > 1) pag += `<button class="page-btn" onclick="goPage(${curPage-1})">‹</button>`;
+  for (let i=1; i<=totalPages; i++) pag += `<button class="page-btn ${i===curPage?'active':''}" onclick="goPage(${i})">${i}</button>`;
+  if (curPage < totalPages) pag += `<button class="page-btn" onclick="goPage(${curPage+1})">›</button>`;
+  document.getElementById('pagination').innerHTML = pag;
+}
+
+function goPage(p) { curPage=p; renderCollection(); window.scrollTo(0,200); }
+function sortBy(btn, s) {
+  curSort=s; curPage=1;
+  document.querySelectorAll('.sort-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderCollection();
+}
+
+// ── PRODUCT DETAIL ──
+function renderProduct(id) {
+  id = Number(id);
+  const ck = getCollKey(id);
+  const c = COLLECTIONS[ck];
+  document.getElementById('detail-viewer').setAttribute('src', `./SCULPTURE_ASSEMBLY_${id}.glb`);
+  document.getElementById('detail-breadcrumb').onclick = () => navigate('collection', ck);
+  document.getElementById('detail-breadcrumb').textContent = '← ' + c.name;
+  document.getElementById('detail-name').textContent = getName(id);
+  document.getElementById('detail-sku').textContent = `SKU-${id} · ${c.name} · ${c.emoji} ${c.tagline}`;
+  document.getElementById('detail-price').textContent = `$${getPrice(id)}`;
+  document.getElementById('detail-desc').textContent = getDesc(id);
+  document.getElementById('detail-spec-id').innerHTML = `<span class="spec-label">Design ID</span><span class="spec-val">SCULPTURE_ASSEMBLY_${id}</span>`;
+  document.getElementById('detail-order-btn').onclick = () => window.open('https://www.etsy.com/shop/AESTHETEQ3D','_blank');
+
+  document.querySelectorAll('.color-opt').forEach(opt => {
+    opt.addEventListener('click', function() {
+      document.querySelectorAll('.color-opt').forEach(o => o.classList.remove('active'));
+      this.classList.add('active');
+      document.getElementById('color-name').textContent = this.dataset.name;
+    });
+  });
+  document.querySelectorAll('.size-opt').forEach(opt => {
+    opt.addEventListener('click', function() {
+      document.querySelectorAll('.size-opt').forEach(o => o.classList.remove('active'));
+      this.classList.add('active');
+    });
+  });
+}
+
+// ── FAQ ──
+function toggleFaq(el) {
+  el.parentElement.classList.toggle('open');
+}
+
+// ── FILE:// DETECTION ──
+function detectLocalFile() {
+  if (window.location.protocol === 'file:') {
+    document.getElementById('local-notice').style.display = 'block';
+  }
+}
+
+// ── LOADER ──
+function runLoader() {
+  const bar = document.getElementById('loader-bar');
+  let w = 0;
+  const iv = setInterval(() => {
+    w = Math.min(w + Math.random()*18, 95);
+    bar.style.width = w + '%';
+  }, 80);
+  setTimeout(() => {
+    clearInterval(iv);
+    bar.style.width = '100%';
+    setTimeout(() => document.getElementById('loader').classList.add('hidden'), 300);
+  }, 1100);
+}
+
+// ── INIT ──
+window.addEventListener('DOMContentLoaded', () => {
+  renderHomeCollections();
+  renderFeatured();
+  runLoader();
+  detectLocalFile();
+});
+</script>
+</body>
+</html>

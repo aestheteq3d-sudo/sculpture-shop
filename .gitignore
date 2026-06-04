@@ -1,0 +1,5 @@
+blender/
+venv/
+*.tar.xz
+*.pth
+__pycache__/

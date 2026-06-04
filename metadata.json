@@ -1,0 +1,8 @@
+{
+  "name": "Parametric Lamp Designer",
+  "description": "An interactive 3D web application to design and export parametric biomorphic lamps.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
